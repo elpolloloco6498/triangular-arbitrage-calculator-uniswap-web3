@@ -1,3 +1,5 @@
+import json
+
 import requests
 from pprint import pprint
 import arbitrage
@@ -44,11 +46,17 @@ if __name__ == "__main__":
     # Get data
     pairs = get_uniswap_informations(urlUniswap)
     trading_pairs_list = arbitrage.get_structured_trading_pairs(pairs)
-    #pprint(trading_pairs_list)
+
     # Detect opportunities with surface rate calculation
+    surface_rates_list = []
     for trading_pairs in trading_pairs_list:
-        surface_rate = arbitrage.calc_triangular_arb_surface_rate(trading_pairs, min_rate=0)
-        print(surface_rate)
+        surface_rate = arbitrage.calc_triangular_arb_surface_rate(trading_pairs, min_rate=0.002)
+        if len(surface_rate) > 0:
+            surface_rates_list.append(surface_rate)
+
+    # Save opportunities to JSON file
+    with open("uniswap_surface_rates.json", "w") as f:
+        json.dump(surface_rates_list, f)
 
 
 

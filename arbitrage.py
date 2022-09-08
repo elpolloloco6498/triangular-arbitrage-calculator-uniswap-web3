@@ -134,11 +134,17 @@ def calc_triangular_arb_surface_rate(t_group, min_rate=0):
     swap_1_rate = 0
     swap_2_rate = 0
     swap_3_rate = 0
+    swap_1 = 0
+    swap_2 = 0
+    swap_3 = 0
+
+    calculated = False
 
     # Computes surface rate for both direction of trade
     # Trade Forward
     for direction in trade_directions:
         # Forward: start with aBase
+
         if direction == "forward":
             swap_1 = a_base
             swap_2 = a_quote
@@ -146,7 +152,7 @@ def calc_triangular_arb_surface_rate(t_group, min_rate=0):
             pool_direction_contract_1 = "baseToQuote"
             pool_contract_1 = a_contract
             acquired_coin_t1 = starting_amount * swap_1_rate
-
+            
             # Forward: Check if aQuote (acquired coin) matches bBase
             if a_quote == b_base:
                 pool_contract_2 = b_contract
@@ -246,7 +252,7 @@ def calc_triangular_arb_surface_rate(t_group, min_rate=0):
             pool_contract_1 = a_contract
             acquired_coin_t1 = starting_amount * swap_1_rate
 
-            # Forward: Check if aBase (acquired coin) matches bBase
+            # Reverse: Check if aBase (acquired coin) matches bBase
             if a_base == b_base:
                 pool_contract_2 = b_contract
                 pool_direction_contract_2 = "baseToQuote"
@@ -254,21 +260,21 @@ def calc_triangular_arb_surface_rate(t_group, min_rate=0):
                 acquired_coin_t2 = acquired_coin_t1 * swap_2_rate
 
                 pool_contract_3 = c_contract
-                # Forward: Check if bQuote (acquired coin) matches cBase
+                # Reverse: Check if bQuote (acquired coin) matches cBase
                 if b_quote == c_base:
                     swap_3 = c_base
                     pool_direction_contract_3 = "baseToQuote"
                     swap_3_rate = c_token_1_price
                     acquired_coin_t3 = acquired_coin_t2 * swap_3_rate
 
-                # Forward: Check if bQuote (acquired coin) matches cQuote
+                # Reverse: Check if bQuote (acquired coin) matches cQuote
                 elif b_quote == c_quote:
                     swap_3 = c_quote
                     pool_direction_contract_3 = "quoteToBase"
                     swap_3_rate = c_token_0_price
                     acquired_coin_t3 = acquired_coin_t2 * swap_3_rate
 
-            # Forward: Check if aBase (acquired coin) matches bQuote
+            # Reverse: Check if aBase (acquired coin) matches bQuote
             if a_base == b_quote:
                 pool_contract_2 = b_contract
                 pool_direction_contract_2 = "quoteToBase"
@@ -276,21 +282,21 @@ def calc_triangular_arb_surface_rate(t_group, min_rate=0):
                 acquired_coin_t2 = acquired_coin_t1 * swap_2_rate
 
                 pool_contract_3 = c_contract
-                # Forward: Check if bBase (acquired coin) matches cBase
+                # Reverse: Check if bBase (acquired coin) matches cBase
                 if b_base == c_base:
                     swap_3 = c_base
                     pool_direction_contract_3 = "baseToQuote"
                     swap_3_rate = c_token_1_price
                     acquired_coin_t3 = acquired_coin_t2 * swap_3_rate
 
-                # Forward: Check if bBase (acquired coin) matches cQuote
+                # Reverse: Check if bBase (acquired coin) matches cQuote
                 elif b_base == c_quote:
                     swap_3 = c_quote
                     pool_direction_contract_3 = "quoteToBase"
                     swap_3_rate = c_token_0_price
                     acquired_coin_t3 = acquired_coin_t2 * swap_3_rate
 
-            # Forward: Check if aBase (acquired coin) matches cBase
+            # Reverse: Check if aBase (acquired coin) matches cBase
             if a_base == c_base:
                 pool_contract_2 = c_contract
                 pool_direction_contract_2 = "baseToQuote"
@@ -298,21 +304,21 @@ def calc_triangular_arb_surface_rate(t_group, min_rate=0):
                 acquired_coin_t2 = acquired_coin_t1 * swap_2_rate
 
                 pool_contract_3 = b_contract
-                # Forward: Check if cQuote (acquired coin) matches bBase
+                # Reverse: Check if cQuote (acquired coin) matches bBase
                 if c_quote == b_base:
                     swap_3 = b_base
                     pool_direction_contract_3 = "baseToQuote"
                     swap_3_rate = b_token_1_price
                     acquired_coin_t3 = acquired_coin_t2 * swap_3_rate
 
-                # Forward: Check if cQuote (acquired coin) matches bQuote
+                # Reverse: Check if cQuote (acquired coin) matches bQuote
                 if c_quote == b_quote:
                     swap_3 = b_quote
                     pool_direction_contract_3 = "quoteToBase"
                     swap_3_rate = b_token_0_price
                     acquired_coin_t3 = acquired_coin_t2 * swap_3_rate
 
-            # Forward: Check if aBase (acquired coin) matches cQuote
+            # Reverse: Check if aBase (acquired coin) matches cQuote
             if a_base == c_quote:
                 pool_contract_2 = c_contract
                 pool_direction_contract_2 = "quoteToBase"
@@ -321,14 +327,14 @@ def calc_triangular_arb_surface_rate(t_group, min_rate=0):
 
                 pool_contract_3 = b_contract
 
-                # Forward: Check if cBase (acquired coin) matches bBase
+                # Reverse: Check if cBase (acquired coin) matches bBase
                 if c_base == b_base:
                     swap_3 = b_base
                     pool_direction_contract_3 = "baseToQuote"
                     swap_3_rate = b_token_1_price
                     acquired_coin_t3 = acquired_coin_t2 * swap_3_rate
 
-                # Forward: Check if cBase (acquired coin) matches bQuote
+                # Reverse: Check if cBase (acquired coin) matches bQuote
                 elif c_base == b_quote:
                     swap_3 = b_quote
                     pool_direction_contract_3 = "quoteToBase"
@@ -361,5 +367,6 @@ def calc_triangular_arb_surface_rate(t_group, min_rate=0):
                 "profitLoss": profit_loss,
                 "surface_rate": surface_rate_perc
             }
+            return surface_dict
 
-        return surface_dict
+    return surface_dict
