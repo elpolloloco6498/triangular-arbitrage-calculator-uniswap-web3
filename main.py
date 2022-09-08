@@ -36,6 +36,7 @@ def get_uniswap_informations(url):
     }
     """
 
+    # Graph QL request
     dict_json = requests.post(urlUniswap, json={"query": query_string}).json()
     return dict_json
 
@@ -43,10 +44,11 @@ if __name__ == "__main__":
     # Get data
     pairs = get_uniswap_informations(urlUniswap)
     trading_pairs_list = arbitrage.get_structured_trading_pairs(pairs)
-
-    # Detect opportunities
+    #pprint(trading_pairs_list)
+    # Detect opportunities with surface rate calculation
     for trading_pairs in trading_pairs_list:
-        surface_rate = arbitrage.calc_triangular_arb_surface_rate(trading_pairs)
+        surface_rate = arbitrage.calc_triangular_arb_surface_rate(trading_pairs, min_rate=0)
+        print(surface_rate)
 
 
 
